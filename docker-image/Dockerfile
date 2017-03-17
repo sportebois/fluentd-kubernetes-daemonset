@@ -10,7 +10,7 @@ RUN apk --no-cache --update add \
     echo 'gem: --no-document' >> /etc/gemrc && \
     gem install fluent-plugin-secure-forward && \
     gem install fluent-plugin-record-reformer && \
-    gem install fluent-plugin-elasticsearch && \
+    gem install fluent-plugin-loggly && \
     gem install fluent-plugin-kubernetes_metadata_filter && \
     apk del build-base ruby-dev && \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /usr/lib/ruby/gems/*/cache/*.gem
