@@ -4,8 +4,14 @@ Inspired from Fluentd's [Kubernetes Logging with Fluentd](http://docs.fluentd.or
 
 ## Configuration
 
-Make sure you grab a valid Loggly token from [the customer token page](https://www.loggly.com/docs/customer-token-authentication-token), and put it as `loggly.LOGGLY_TOKEN` secret in Kubernetes, or update the yaml accordingly:
+Make sure you grab a valid Loggly token from [the customer token page](https://www.loggly.com/docs/customer-token-authentication-token), then create the config like this (assuming the token is in the LOGGLY_TOKEN env var)
 
 ```
-kubectl create secret generic loggly --from-literal=LOGGLY_TOKEN=$LOGGLY_TOKEN --namespace=kube-system
+sed "s/LOGGLY_TEMPLATE/$(sed "s/LOGGLY_TOKEN/$LOGGLY_TOKEN/g" fluent.template.conf | base64)/g" fluentd-loggly-secret.template.yaml > fluentd-loggly-secret.yaml
+
+kubectl create -f fluentd-loggly-secret.yaml
 ```
+
+## Installation
+
+Then a simple `kubectl create -f fluentd-loggly-ds.yaml --record` will get the daemonSet created.
