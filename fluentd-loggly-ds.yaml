@@ -17,12 +17,13 @@ spec:
     spec:
       containers:
         - name: fluentd
-          image: sportebois/fluentd-kubernetes-loggly-daemonset
+          image: sportebois/fluentd-kubernetes-loggly-daemonset:loggly
+          imagePullPolicy: Always
           env:
             - name: LOGGLY_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: common
+                  name: loggly
                   key: LOGGLY_TOKEN
           resources:
             limits:
