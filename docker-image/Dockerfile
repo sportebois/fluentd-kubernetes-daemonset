@@ -11,6 +11,7 @@ RUN apk --no-cache --update add \
     gem install fluent-plugin-secure-forward && \
     gem install fluent-plugin-record-reformer && \
     gem install fluent-plugin-loggly && \
+    gem install fluent-plugin-rewrite-tag-filter &&\
     gem install fluent-plugin-kubernetes_metadata_filter && \
     apk del build-base ruby-dev && \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /usr/lib/ruby/gems/*/cache/*.gem
