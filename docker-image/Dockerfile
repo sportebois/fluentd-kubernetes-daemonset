@@ -6,13 +6,16 @@ ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
 
 RUN apk --no-cache --update add \
                             build-base \
-                            ruby-dev && \
+                            ruby-dev \
+                            python \
+                            py-pip && \
     echo 'gem: --no-document' >> /etc/gemrc && \
     gem install fluent-plugin-secure-forward && \
     gem install fluent-plugin-record-reformer && \
     gem install fluent-plugin-loggly && \
     gem install fluent-plugin-rewrite-tag-filter &&\
     gem install fluent-plugin-kubernetes_metadata_filter && \
+    pip install psc && \
     apk del build-base ruby-dev && \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /usr/lib/ruby/gems/*/cache/*.gem
 
