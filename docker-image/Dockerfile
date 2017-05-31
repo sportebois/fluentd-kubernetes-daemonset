@@ -28,5 +28,8 @@ ENV FLUENTD_OPT=""
 ENV FLUENTD_CONF="fluent.conf"
 #ENV LD_PRELOAD="/usr/lib/libjemalloc.so.2"
 
+# Override that env var if psc needs to decrypt secrets from another region
+ENV PSC_REGION=us-east-1
+
 # Run Fluentd
-CMD exec fluentd -c /fluentd/etc/$FLUENTD_CONF -p /fluentd/plugins $FLUENTD_OPT
+CMD eval $(psc decrypt-env -r $PSC_REGION) && exec fluentd -c /fluentd/etc/$FLUENTD_CONF -p /fluentd/plugins $FLUENTD_OPT
