@@ -1,0 +1,10 @@
+@include kubernetes.conf
+
+<filter kubernetes.var.log.containers.*.log>
+  @type kubernetes_metadata
+</filter>
+
+<match **>
+  @type loggly
+  loggly_url https://logs-01.loggly.com/inputs/LOGGLY_TOKEN/tag/fluentd
+</match>

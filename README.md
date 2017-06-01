@@ -4,19 +4,18 @@ Inspired from Fluentd's [Kubernetes Logging with Fluentd](http://docs.fluentd.or
 
 ## Configuration
 
-Make sure you grab a valid Loggly token from [the customer token page](https://www.loggly.com/docs/customer-token-authentication-token), then create the config like this (assuming the token is in the LOGGLY_TOKEN env var)
+Make sure you grab a valid Loggly token from [the customer token page](https://www.loggly.com/docs/customer-token-authentication-token). In the next step, I'll use LOCAL_LOGGLY_TOKEN var tas a placeholder for this value.
+
+We'll save this token as an EC2 SSM Parameter Store SecureString, using [`psc`](https://github.com/smooch/parameter-store-client), the Parameter Store Client (`pip install psc` if you need it)
+
+`psc set "staging.loggly.token" "$LOCAL_LOGGLY_TOKEN" -r us-east-1`
+
+The `staging.loggly.token` value is the key of our secret, you can use whatever you like (as long as it meets the Parameter Store constraints), but change this, make sure the env var we inject in our pod is changed accordingly. (in the fluentd-loggly-cm.yaml template, or by adding some value to override this default)
 
 Then we will create a configMap with both the `kubernetes.conf` file, and a `fluent.conf` template. Both these files will be populated in the /fluentd/etc/ folder of the pod container.
 
-We also create a fluentd secret with our Loggly token, and we'll sed the fluent.conf file to inject this secret on container start, just before to start fluentd.
-
 
 ```
-# Prepare the secret
-B64_LOGGLY_TOKEN=`echo $LOGGLY_TOKEN | base64`
-B64_LOGGLY_TOKEN_ESCAPED="$( echo "${B64_LOGGLY_TOKEN}" | sed 's/[\\&*./+!]/\\&/g' )"
-sed "s/LOGGLY_TOKEN/${B64_LOGGLY_TOKEN_ESCAPED}/g" fluentd-loggly-secret.template.yaml > fluentd-loggly-secret.yaml
-
 # Create the secret and the configmap
 kubectl create -f fluentd-loggly-secret.yaml -f fluentd-loggly-cm.yaml
 ```
